@@ -197,13 +197,58 @@ f.multiplyBySomeFactor(4)  // 12: Int
 
 このように、そのまま書くと見づらくなったりするコードを短く簡潔に書くための構文を「糖衣構文(英: syntax sugar)」と呼びます。
 
-## `extends`
+## `extends` による部分型
 
+> 「値、変数や式がどんな種類であると分かっているか」の情報そのものが「型」と呼ばれる
 
+「型」の項目ではこのように型を説明し、`Int` や `String` に対して、 `Any` が「何もわかっていない」ことを指し示す型であると説明しました。つまり、「変数 `x` が `Int` であることを知っている」ならば「変数 `x` が `Any` であることを知っている」と言えそうです。
+
+このような時、 `Int` は `Any` の**部分型である**と言うことにします。逆に、`Any` は `Int` の部分型ではありません。ある値が `Any` だからと言って、それが `Int` とは限らないからです。
+
+Scalaの部分型関係には様々なものがありますが、代表的なものが、 `trait A` が別の `trait B` の部分型になっているものです。これは、 `trait A` を宣言する時に `trait A extends B` のように書くことで実現できます。
+
+次の例では、`Int` に対して `Int` を返す関数の型 `Function1[Int, Int]` の部分型として、入力に比例する出力を返す関数である `LinearIntFunction` を定義しています。
+
+```Scala
+trait LinearIntFunction extends Function1[Int, Int] {
+  // 比例係数
+  val coefficient: Int
+
+  override def apply(x: Int): Int = coefficient * x
+}
+
+// LinearIntFunction は Function1[Int, Int] の部分型なので、
+// myLinearFunction: Function1[Int, Int] = ...
+// と書いても大丈夫
+val myLinearFunction: LinearIntFunction = new LinearIntFunction {
+  val coefficient: Int = 3
+
+  // Function1[Int, Int] が実装すべき apply は LinearIntFunction がすでに定義しているため、
+  // 新しくオブジェクトを作る際には書かなくて良い
+}
+
+myLinearFunction(0)  // -> 0
+myLinearFunction(3)  // -> 9
+myLinearFunction(-5) // -> -15
+```
+
+上のコードでの `Function1[Int, Int]` を `LinearIntFunction` の「親trait」と呼びます。対して、`LinearIntFunction` を「子trait」と呼びます。
+
+子traitが `extends` を指定したとき、親traitのメソッドを実装しておくことができます。上の例では、 `LinearIntFunction` は `Function1[Int, Int]` の `apply` メソッドを実装しています。これにより、新しく `LinearIntFunction` のオブジェクトを定義するときには `coefficient` を指定するだけで良くなります。
+
+`override` は、親traitのメソッドを子traitの時点で実装してしまう意図を伝えるためのものです。ですから、親traitに宣言されていないメソッドを `override` しようとするとエラーになります。例えば、以下のコードはエラーが出て実行させてくれません。
+
+```
+trait LinearIntFunction extends Function1[Int, Int] {
+  // 比例係数
+  val coefficient: Int
+
+  // applyのlが抜けている！
+  override def appy(x: Int): Int = coefficient * x
+}
+```
 
 ## コレクション
-
-
 
 ## `class`、`class`による型
 
