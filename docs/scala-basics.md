@@ -50,7 +50,7 @@ val firstValue = 3
 val secondValue = firstValue * firstValue + 1
 ```
 
-これで、 `secondValue` は `10` を持つことになります。Scastieは最後の式の値を表示してくれるので、
+これで、 `secondValue` は `10` を持つことになります。Scastieは式の値を表示してくれるので、
 
 ```Scala
 val firstValue = 3
