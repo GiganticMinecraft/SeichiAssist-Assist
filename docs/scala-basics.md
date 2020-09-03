@@ -116,6 +116,7 @@ myObject.integerProperty
 trait ObjectWithAMethod {
   val integerProperty: Int
 
+  // メソッド定義
   def multiplyPropertyBy(x: Int): Int = integerProperty * x
 }
 ```
@@ -139,9 +140,54 @@ myObjectWithAMethod.multiplyPropertyBy(2)
 // -> 42: Int
 ```
 
-## 関数、関数オブジェクト、関数の型
+## 関数、`Function` trait、関数オブジェクト
 
+関数(英: function)とは値を別の値へ対応させるものを指す抽象的な概念です。例えば、数学で使われる関数 _succ_ は、自然数に +1 した別の自然数を対応付け、 2 = _succ_(1) のような式を成り立たせます。
 
+関数は受け取れる値の型(引数型)、値を渡した(注: 値を渡すことを適用; applyとも言います)結果出てくる値の型(結果型)、値の具体的な対応付けの三つの情報からなります。
+
+Scalaでは関数を扱うための型として、 `apply` メソッドを持つ `Function1[T1, R]` という `trait` が[用意されて](https://www.scala-lang.org/api/current/scala/Function1.html)います(宣言に書かれた `-T1` や `+R` の`+, -`の意味は多相性の項目で説明しますが、とりあえず`+`と`-`は無視できます)。 `T1` の部分が引数型、 `R` の部分が結果(**R**esult)型になります。
+
+次のコードは実際に `Function1[Int, Int]` の値を作成します。
+
+```Scala
+val intSquareFunction: Function1[Int, Int] = new Function1[Int, Int] {
+  def apply(x: Int): Int = x * x
+}
+
+intSquareFunction.apply(3) // -> 9: Int
+```
+
+### 糖衣構文; syntax sugar
+
+先程のコードは関数を定義してそれを呼び出すだけであるのに、コードとしてそこそこ長いものになってしまいました。
+
+先程と「全く同じ内容」を短く書くために、Scalaはそれ専用の構文を用意しています。
+
+```Scala
+val intSquareFunction: Int => Int = (x => x * x)
+
+intSquareFunction(3) // -> 9: Int
+```
+
+まず、 `Int => Int` は `Function1[Int, Int]` と同義です。
+
+`(x => x * x)` は「ラムダ式」と呼ばれる言語機能を使用しています。 `Function1` のように、各オブジェクトが定義しなければならないメソッドが一つしかない `trait` を SAM (**S**ingle **A**bstract **M**ethod; 単一抽象メソッド) trait  と呼びますが、SAM trait の値を短く記述するためにラムダ式が使えます：
+
+```Scala
+trait LinearMultiplication {
+  def multiplyBySomeFactor(x: Int): Int
+}
+
+val f: LinearMultiplication = (x => x * 3)
+
+f.multiplyBySomeFactor(-1) // -3: Int
+f.multiplyBySomeFactor(4)  // 12: Int
+```
+
+最後の行では `intSquareFunction.apply(3)` が `intSquareFunction(3)` になりましたが、これはScalaが `apply` メソッドを特別に扱う機能を利用しています。`intSquareFunction(3)` のように、「オブジェクトそのものを関数のように呼び出す」コードは、そのオブジェクトの `apply` メソッドを呼び出す意図であると解釈されます。
+
+このように、そのまま書くと見づらくなったりするコードを短く簡潔に書くための構文を「糖衣構文(英: syntax sugar)」と呼びます。
 
 ## `class`、`class`による型、`class`のインスタンス化
 
