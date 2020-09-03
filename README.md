@@ -11,4 +11,4 @@ TODO: 整理
  - 導入
  - [Scalaの基本](./docs/scala-basics.md)
  - [ソフトウェアの基本](./docs/software-basics.md)
- - [上級編](./docs/advanced-topics.md)
+ - [上級編](./docs/advanced-topics/README.md)
