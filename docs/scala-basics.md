@@ -6,7 +6,7 @@ SeichiAssistでは、プログラムのコードを書くために[Scala](https:
 
 ### 読み方
 
-次のように書かれる「コードスニペット」は、(特に明記が無い限りScalaで書かれた)コードを含みます：
+次のように書かれる「コードスニペット」は、(特に明記が無い限りScalaで書かれた)コードを含みます。
 
 ```Scala
 val variable = 42
@@ -65,7 +65,7 @@ secondValue
 
 例えば`0`は`Int`(注: integer; 整数)という型であることがすぐに分かりますし、`"abc"`は`String`という型になります。Scalaには`Int`のように既に用意された型もあれば、自分で型を作ることもできます。
 
-変数の型は明示的に書くことができます：
+変数の型は明示的に書くことができます。
 
 ```Scala
 val integerValue: Int = 42
@@ -178,7 +178,7 @@ intSquareFunction(3) // -> 9: Int
 
 まず、 `Int => Int` は `Function1[Int, Int]` と同義です。
 
-`(x => x * x)` は「ラムダ式」と呼ばれる言語機能を使用しています。 `Function1` のように、各オブジェクトが定義しなければならないメソッドが一つしかない `trait` を SAM (**S**ingle **A**bstract **M**ethod; 単一抽象メソッド) trait  と呼びますが、SAM trait の値を短く記述するためにラムダ式が使えます：
+`(x => x * x)` は「ラムダ式」と呼ばれる言語機能を使用しています。 `Function1` のように、各オブジェクトが定義しなければならないメソッドが一つしかない `trait` を SAM (**S**ingle **A**bstract **M**ethod; 単一抽象メソッド) trait  と呼びますが、SAM trait の値を短く記述するためにラムダ式が使えます。
 
 ```Scala
 trait LinearMultiplication {
@@ -195,8 +195,16 @@ f.multiplyBySomeFactor(4)  // 12: Int
 
 このように、そのまま書くと見づらくなったりするコードを短く簡潔に書くための構文を「糖衣構文(英: syntax sugar)」と呼びます。
 
+## `extends`
+
 ## コレクション
 
+
+
 ## `class`、`class`による型
+
+### `case class`
+
+## `sealed`による直和(discriminated union)
 
 ## 多相性、多相的な定義
