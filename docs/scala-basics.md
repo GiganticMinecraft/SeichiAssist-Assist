@@ -89,7 +89,7 @@ Scalaの値には「オブジェクト」というものがあります。オブ
 
 `new` で作っただけのオブジェクトを変数に入れようとする時、何もしないならば型に `Any` を指定するしかありません。これだとプロパティに安全にアクセスすることができない(補足: 実はできるが実行が遅い)ため、先に `trait` として型を定義する必要があります。オブジェクトがとある `trait` の型を持つことは明示的に宣言する必要があり、 `new` の直後にtrait名を書くことができます。
 
-次のコードはオブジェクトの型を定義し、定義した型を持つオブジェクトを `new` で作成し `myObject` に持たせ、最後に `integerProperty` を取り出しています。 `//` から始まる箇所はコード上無視される「コメント」です。
+次のコードはオブジェクトの型を定義し、定義した型を持つオブジェクトを `new` で作成し `myObject` に持たせ、最後に `integerProperty` を `myObject.integerProperty` と取り出しています。 `//` から始まる箇所はコード上無視される「コメント」です。
 
 ```Scala
 // 型を定義する
@@ -109,10 +109,39 @@ val myObject: MyObjectType = new MyObjectType {
 // プロパティの値を取り出す
 myObject.integerProperty
 ```
- 
-TODO: メソッドに関する説明
+
+オブジェクトは、プロパティの他に「メソッド」と呼ばれる、プロパティ等を加工する計算をあわせ持つことができます。メソッドは「引数(ひきすう)」と呼ばれる入力を受け取ることができます。 `def` の後にメソッド名、続いて引数のリスト、計算結果の型と書くことで定義できます。例えば、次の `trait` はプロパティ`integerProperty`を一つ、プロパティへ乗算するメソッドを一つ持ちます。
+
+```Scala
+trait ObjectWithAMethod {
+  val integerProperty: Int
+
+  def multiplyPropertyBy(x: Int): Int = integerProperty * x
+}
+```
+
+メソッドを「呼び出し」て計算をさせたい時は、プロパティを取り出す際のように `.` にメソッド名を繋げ、渡したい引数を括弧の中に書きます。
+
+```Scala
+trait ObjectWithAMethod {
+  val integerProperty: Int
+
+  def multiplyPropertyBy(x: Int): Int = integerProperty * x
+}
+
+val myObjectWithAMethod = new ObjectWithAMethod {
+    val integerProperty: Int = 21
+
+    // multiplyPropertyByは再度ここに書く必要はない
+}
+
+myObjectWithAMethod.multiplyPropertyBy(2)
+// -> 42: Int
+```
 
 ## 関数、関数オブジェクト、関数の型
+
+
 
 ## `class`、`class`による型、`class`のインスタンス化
 
