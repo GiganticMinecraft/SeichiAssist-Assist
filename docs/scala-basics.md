@@ -327,7 +327,7 @@ myIntSet.contains(-1) // false: Boolean
 
 ですから、`.contains` を何万回何億回と呼ばないとならないような場合では、 `Vector` などではなく `Set` を使えば処理に掛かる時間が大幅に減ることでしょう。
 
-このように、同じ操作をする時にもコレクションにより処理時間が異なることがあります。とあるコレクションのサイズが大きくなった時、どのくらい操作に時間が掛かるようになるか、という指標を**性能特性**と呼びます。Scalaのコレクションの性能特性を詳しく知りたい場合、[公式ページの表](https://docs.scala-lang.org/ja/overviews/collections/performance-characteristics.html)を見てみると良いでしょう。参考までに、 `Vector` の `.contains` のような時間の掛かり方を「線形」、 `Set` の `.contains` のような時間のかかり方を「定数」と呼びます。
+このように、同じ操作をする時にもコレクションにより処理時間が異なることがあります。とあるコレクションのサイズが大きくなった時、どのくらい操作に時間が掛かるようになるか、という指標を**性能特性**と呼びます。Scalaのコレクションの性能特性を詳しく知りたい場合、[公式ページの表](https://docs.scala-lang.org/ja/overviews/collections/performance-characteristics.html)を見てみると良いでしょう。参考までに、 `Vector` の `.contains` のような時間の増え方を「線形」、 `Set` の `.contains` のように掛かる時間が増えない場合を「定数」と呼びます。
 
 ## `class`、`class`による型
 
