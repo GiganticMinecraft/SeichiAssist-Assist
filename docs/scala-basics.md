@@ -309,7 +309,7 @@ myMap(2) // two : String
 
 `Set[E]` は値の集まりではあるものの、`Vector` のように順序を持っていません。 `Set[E]` は `Vector` のように `.map` メソッドを持ち、 `.contains` メソッドによって値が入っているか入っていないかを調べることができます。
 
-`.contains` メソッドは、 **真偽値** である `Boolean` を返してきます。 `.contains(1)` が `true` であるならば `Set` が `1` を含んでおり、 `.contains(1)` が `false` であるならば `Set` は `1` を含んでいません。
+`.contains` メソッドは、 **真偽値** である `Boolean` を返してきます。例えば `.contains(1)` が `true` であるならば `Set` が `1` を含んでおり、 `.contains(1)` が `false` であるならば `Set` は `1` を含んでいません。
 
 ```Scala
 val myIntSet: Set[Int] = Set(1, 3, 5)
