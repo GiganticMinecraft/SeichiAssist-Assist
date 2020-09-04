@@ -32,6 +32,9 @@ Scalaでプログラムを書くにあたって最も基本的なものとも言
    - `0`, `-10`, `42`
  - 「文字列」値
    - `"abc"`, `"あいうえお"`, `"Scala"`
+ - 「真偽」値
+   - `true`, `false`
+     - 注: `true` と `false` は、それぞれ何かの条件が「満たされている」、「満たされていない」の意味を持ちます。詳しくはコレクションの節にて説明します。
  - 「小数部分を持つ数」値
    - `0.3`, `-1.5`
      - 補足: 実は、コンピュータの内部的な事情によりこれらの値は私たちが思ったように正確に表されているとは限りません。 `0.1 + 0.2` はしばしば `0.3` とは違う値を返してきます！詳しくは、「浮動小数点数　誤差」などと検索してみてください。
@@ -250,6 +253,79 @@ trait LinearIntFunction extends Function1[Int, Int] {
 ```
 
 ## コレクション
+
+複数の(型が同じ)値を大量に扱いたいことがあります。マインクラフトの例で言えば、オンラインのプレーヤー全員に対して同じことをしたいであるとか、幾つかのブロックに対して同じことをしたい、などでしょうか。
+
+「オンラインのプレーヤー全員」や「幾つかのブロック」のように、**ものの集まりを表す**値を**コレクション**と呼びます。コレクションの中に入っているものを、そのコレクションの**要素**と呼びます。
+
+Scalaは
+
+ - `Vector[E]` など、「一列に並んだ」データ
+ - `Map[K, V]` など、「KからVへの対応を表す」データ
+ - `Set[E]` など、「並び順を気にしない集まりである」データ
+
+などを標準で提供しています。これらは幾つかの `trait` を親に持っていて、それぞれの `trait` に様々なメソッドが定義されています。
+
+### Vector
+
+「一列に並んだデータ」で万能である `Vector[E]` の例を見てみましょう。`E` の部分には、 `Function1` で見たように具体的な型を入れます。
+
+```Scala
+val myCollection: Vector[Int] = Vector(1, 2, 3, 4)
+
+myCollection // Vector(1, 2, 3, 4): Vector[Int]
+```
+
+`Vector` は、要素すべてを「一律に」変換することができます。
+
+```Scala
+val myCollection: Vector[Int] = Vector(1, 2, 3, 4)
+
+myCollection // Vector(1, 2, 3, 4): Vector[Int]
+
+myCollection.map(n => n * 2) // Vector(2, 4, 6, 8): Vector[Int]
+myCollection.map(n => n * n) // Vector(1, 4, 9, 16): Vector[Int]
+```
+
+### Map
+
+`Map[K, V]` は、 `K` の値に `V` の値を対応させるようなコレクションです。例を見てみましょう。
+
+```Scala
+val myMap: Map[Int, String] = Map(
+  (0, "zero"),
+  (1, "one"),
+  (2, "two")
+)
+
+myMap(0) // zero: String
+myMap(1) // one : String
+myMap(2) // two : String
+```
+
+注: 上の例で、`myMap(3)` のように対応を書いていない `Int` から `String` を持ってこようとするとエラーとなります。
+
+### Setと性能特性
+
+`Set[E]` は値の集まりではあるものの、`Vector` のように順序を持っていません。 `Set[E]` は `Vector` のように `.map` メソッドを持ち、 `.contains` メソッドによって値が入っているか入っていないかを調べることができます。
+
+`.contains` メソッドは、 **真偽値** である `Boolean` を返してきます。 `.contains(1)` が `true` であるならば `Set` が `1` を含んでおり、 `.contains(1)` が `false` であるならば `Set` は `1` を含んでいません。
+
+```Scala
+val myIntSet: Set[Int] = Set(1, 3, 5)
+
+myIntSet.map(n => n * 2) // Set(2, 6, 10): Set[Int]
+myIntSet.map(n => -n)    // Set(-1, -3, -5): Set[Int]
+
+myIntSet.contains(3)  // true: Boolean
+myIntSet.contains(-1) // false: Boolean
+```
+
+さて、上のコードで `Set` を `Vector` に変えてみてください。`.map` した結果が今度は `Vector` になりますが、`Vector` も `.contains` メソッドを持っていますから、結果は同じになります。
+
+なぜわざわざ `Set` を使うのかと言えば、「`Set` の方が `.contains` が速い」からです。`Vector` の `.contains` は、最初から最後まで要素を一つづつ見ていって、探しているものが見つかれば `true` を返し、最後まで探しても見つからなければ `false` を返すようになっています。これでは、コレクションのサイズが大きくなればなるほど「最後まで見ていく」作業は遅くなることでしょう。 対して、 `Set` は(補足: ハッシュテーブルなどの)巧妙な仕組みを利用することにより、コレクションのサイズがとても大きくなっても殆ど一瞬で `.contains` が答えを出してくれるようになっています。
+
+コレクションにより、同じ操作をする時にも処理時間が異なることがあります。とある型のコレクションのサイズが大きくなった時、どのくらい操作に時間が掛かるようになるか、という指標を**性能特性**と呼びます。Scalaのコレクションの性能特性を詳しく知りたい場合、[公式ページの表](https://docs.scala-lang.org/ja/overviews/collections/performance-characteristics.html)を見てみると良いでしょう。参考までに、 `Vector` の `.contains` のような時間の掛かり方を「線形」、 `Set` の `.contains` のような時間のかかり方を「定数」と呼びます。
 
 ## `class`、`class`による型
 
