@@ -86,6 +86,7 @@ val integerValue: Int = 42
 型は、予期しない値がプログラムのとある箇所から別の箇所へ渡されてしまうことを防ぐ役割があります。以下のコードは、「`integerExpected`は`Int`であることが期待されているが、`String`である`"42"`が入ろうとしている」という理由で実行できません(Scastieに入れてみると、「型エラー」が出ることでしょう)
 
 ```
+// 型エラー: "42" は Int ではない
 val integerExpected: Int = "42"
 ```
 
@@ -269,7 +270,7 @@ trait LinearIntFunction extends Function1[Int, Int] {
   // 比例係数
   val coefficient: Int
 
-  // applyのlが抜けている！
+  // エラー: applyのlが抜けている！
   override def appy(x: Int): Int = coefficient * x
 }
 ```
