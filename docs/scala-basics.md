@@ -329,10 +329,20 @@ myIntSet.contains(-1) // false: Boolean
 
 このように、同じ操作をする時にもコレクションにより処理時間が異なることがあります。とあるコレクションのサイズが大きくなった時、どのくらい操作に時間が掛かるようになるか、という指標を**性能特性**と呼びます。Scalaのコレクションの性能特性を詳しく知りたい場合、[公式ページの表](https://docs.scala-lang.org/ja/overviews/collections/performance-characteristics.html)を見てみると良いでしょう。参考までに、 `Vector` の `.contains` のような時間の増え方を「線形」、 `Set` の `.contains` のように掛かる時間が増えない場合を「定数」と呼びます。
 
-## `class`、`class`による型
+## `case class`
 
-### `case class`
+この節と次節(`sealed`と直和)においては、Scalaの公式ドキュメントの次の2つのページも参考になるかもしれません。
 
-## `sealed`による直和(discriminated union)
+ - [ケースクラス](https://docs.scala-lang.org/ja/tour/case-classes.html)
+ - [パターンマッチング](https://docs.scala-lang.org/ja/tour/pattern-matching.html)
+
+TODO: case classパラメータとインスタンス化について書く
+
+## `sealed`と直和
+
+TOOD: sealedで部分型階層を制限できること、case classでパターンマッチができることを書く
 
 ## 多相性、多相的な定義
+
+TODO: コレクションの例に触れ、すべての型に対して動く定義について触れる
+TODO: 多相関数がいかに制限的かについて触れ、シグネチャから挙動が予測できることを書く
