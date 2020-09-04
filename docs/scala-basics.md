@@ -181,7 +181,7 @@ myObjectWithAMethod.multiplyPropertyBy(2)
 
 関数は受け取れる値の型(引数型)、値を渡した(注: 値を渡すことを適用; applyとも言います)結果出てくる値の型(結果型)、値の具体的な対応付けの三つの情報からなります。
 
-Scalaでは関数を扱うための型として、 `apply` メソッドを持つ `Function1[T1, R]` という `trait` が[用意されて](https://www.scala-lang.org/api/current/scala/Function1.html)います(宣言に書かれた `-T1` や `+R` の`+, -`の意味は多相性の項目で説明しますが、とりあえず`+`と`-`は無視できます)。 `T1` の部分が引数型、 `R` の部分が結果(**R**esult)型になります。
+Scalaでは関数を扱うための型として、 `apply` メソッドを持つ `Function1[T1, R]` という `trait` が[用意されて](https://www.scala-lang.org/api/current/scala/Function1.html)います(宣言に書かれた `-T1` や `+R` の`+, -`は今は無視できます)。 `T1` の部分が引数型、 `R` の部分が結果(**R**esult)型になります。
 
 次のコードは実際に `Function1[Int, Int]` の値を作成します。
 
@@ -381,11 +381,64 @@ point.z // -3: Int
 
 のように、コレクションを作成したときと同じようにオブジェクトが持つべき値を渡します。ここで値を渡す順番は、 `case class` のパラメータリストと同じ順番になります(例えば上の例では、`0`は`y`に対応します)。
 
-## `sealed`と直和
+## 多相性
 
-TOOD: sealedで部分型階層を制限できること、case classでパターンマッチができることを書く
+これまで、`Function`や`Set`を`Function[-T1, +R]`や`Set[E]`などとして紹介しました。
 
-## 多相性、多相的な定義
+例えば`Set[E]`は、`E`の部分に具体的な型`Int`を入れて`Set[Int]`として使えば`Int`の集まりに、`String`を入れて`Set[String]`として使えば`String`の集まりになります。
 
-TODO: コレクションの例に触れ、すべての型に対して動く定義について触れる
-TODO: 多相関数がいかに制限的かについて触れ、シグネチャから挙動が予測できることを書く
+このように、角括弧`[...]`の中に型を書いて使うようなものを**多相的な**(または**ジェネリックな**)型と呼びます。
+
+多相的な型は、角括弧の中に「型引数」を書くことで宣言できます。`Set[E]`の例では`E`が型引数です。多相的なtraitにメソッドを定義するときには、traitが受け取っている型引数をメソッドの型に含むことができます。例えば、次の例では `SetLike[E]` という「要素を含んでいるかを聞くことだけができる」多相的なtraitを定義しています。
+
+```Scala
+trait SetLike[E] {
+  // elementが含まれているか判別する
+  def contains(element: E): Boolean
+}
+```
+
+さて、 `SetLike[E]` に、コレクションの節で出てきた `.map` を追加してましょう。例えば、次のような定義を考えることができます。
+
+```Scala
+trait SetLike[E] {
+  // elementが含まれているか判別する
+  def contains(element: E): Boolean
+
+  // 要素をすべて変換する
+  def map(function: E => E): SetLike[E]
+}
+```
+
+しかし、「変換」が常に `E => E` の形をするとは限りません。例えば、プレーヤーの集まり `Set[Player]` から各プレーヤーの名前を抜き出して、 `Set[String]` へ `.map` したいかもしれません。すると、`map` は `E` から「何か」へ変換してくれる関数を受け取って、その「何か」の集まりである`SetLike[何か]`を返すべきでしょう。
+
+```
+trait SetLike[E] {
+  // elementが含まれているか判別する
+  def contains(element: E): Boolean
+
+  // 要素をすべて変換する
+  // エラー: ??の箇所になんらかの型を書かなければならない
+  def map(function: E => ??): SetLike[??]
+}
+```
+
+これを実現するために、それぞれのメソッドにも鍵括弧を付けることで型引数を書くことができます。
+
+```Scala
+trait SetLike[E] {
+  // elementが含まれているか判別する
+  def contains(element: E): Boolean
+
+  // 要素をすべて変換する
+  def map[R](function: E => R): SetLike[R]
+}
+```
+
+これで無事、 `SetLike[Player]` に対して `.map(player => player.name)` とすることで `SetLike[String]` の値を得ることができるようになりました。
+
+このように、型変数を受け取って処理するメソッドを**多相的なメソッド**と呼びます。
+
+### 何故多相を使うべきか
+
+TODO: ここ書く必要ある？
