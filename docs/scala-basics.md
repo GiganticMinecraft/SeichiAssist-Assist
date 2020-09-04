@@ -268,7 +268,7 @@ Scalaは
 
 ### Vector
 
-「一列に並んだデータ」で万能である `Vector[E]` の例を見てみましょう。`E` の部分には、 `Function1` で見たように具体的な型を入れます。
+「一列に並んだデータ」で万能である `Vector[E]` の例を見てみましょう。`E` の部分には、 `Function1` で見たように具体的な型を入れます。 `Vector` の値を作るためには、 `Vector` に続き、オブジェクトが持つべきデータをカンマ(`,`)区切りで括弧の中に書きます。
 
 ```Scala
 val myCollection: Vector[Int] = Vector(1, 2, 3, 4)
@@ -336,7 +336,27 @@ myIntSet.contains(-1) // false: Boolean
  - [ケースクラス](https://docs.scala-lang.org/ja/tour/case-classes.html)
  - [パターンマッチング](https://docs.scala-lang.org/ja/tour/pattern-matching.html)
 
-TODO: case classパラメータとインスタンス化について書く
+ここまでは、 `trait` により型を定義して、その型に合致するオブジェクトを `new` していました。値を入れてオブジェクトを作るだけなのに数行使うことになり、プロパティ名も毎回書かなければオブジェクトを作成できませんでした。
+
+ただ単に値が入ったようなオブジェクトを作成するのは、 `case class` を使えば少し簡単に実現できます。 `case class` は `trait` のように型を定義するキーワードです。例えば、三次元空間の座標を `Int` の三つ組で表すオブジェクトの型 `ThreeDimensionalPoint` は、
+
+```Scala
+case class ThreeDimensionalPoint(x: Int, y: Int, z: Int)
+```
+
+のように宣言できます。ここで、 `x`、 `y`、 `z` は `ThreeDimensionalPoint` であるオブジェクトのプロパティになります。`x`などはこの `case class` のオブジェクトを作る際に渡すことになるため、**パラメータ**とも呼ばれます。`case class`の定義で、パラメータが並んでいる箇所を**パラメータリスト**と呼びます。そして、このように定義された `case class` のオブジェクトは、
+
+```Scala
+case class ThreeDimensionalPoint(x: Int, y: Int, z: Int)
+
+val point = ThreeDimensionalPoint(1, 0, -3)
+
+point.x // 1 : Int
+point.y // 0 : Int
+point.z // -3: Int
+```
+
+のように、コレクションを作成したときと同じようにオブジェクトが持つべき値を渡します。ここで値を渡す順番は、 `case class` のパラメータリストと同じ順番になります(例えば上の例では、`0`は`y`に対応します)。
 
 ## `sealed`と直和
 
