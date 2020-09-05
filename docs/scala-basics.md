@@ -110,7 +110,7 @@ Scalaの値には「オブジェクト」というものがあります。オブ
 
 ```
 // 新しいオブジェクトを作成し、myObjectに持たせる
-val myObject: Any = new MyObjectType {
+val myObject: Any = new {
   val integerProperty = 123
   
   val stringProperty = "abc"
