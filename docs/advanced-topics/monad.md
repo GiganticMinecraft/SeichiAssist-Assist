@@ -64,7 +64,7 @@ trait Monad[F[_]] {
   def flatMap[A, B](fa: F[A], function: A => F[B]): F[B]
 
   // その他の便利メソッド
-  def map[A, B](fa: F[A], function: A => B): F[B] = flatMap(fa, a => pure(function(a)))
+  def map[A, B](fa: F[A], function: A => B): F[B] = flatMap(fa, (a: A) => pure(function(a)))
 
   // ...
 }
